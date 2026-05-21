@@ -20,6 +20,10 @@ router.get("/:id",authMiddleware,getTaskById);
 
 router.post("/",authMiddleware,createTask);
 
+router.post("/test", (req, res) => {
+    res.json({ message: "Task route working" });
+});
+
 router.put("/:id",authMiddleware,updateTask);
 
 router.delete("/:id",authMiddleware,deleteTask);
