@@ -52,6 +52,7 @@ const getTaskById = async (req, res) => {
         );
 
         if (result.rows.length === 0) {
+
             return res.status(404).json({
                 message: "Task not found"
             });
@@ -79,7 +80,8 @@ const createTask = async (req, res) => {
 
         const {
             title,
-            description
+            description,
+            status
         } = req.body;
 
         const result = await pool.query(
@@ -88,19 +90,24 @@ const createTask = async (req, res) => {
             (
                 user_id,
                 title,
-                description
+                description,
+                status
             )
-            VALUES ($1, $2, $3)
+            VALUES ($1, $2, $3, $4)
             RETURNING *
             `,
             [
                 userId,
                 title,
-                description
+                description,
+                status
             ]
         );
 
-        res.status(201).json(result.rows[0]);
+        // RETURN CREATED TASK
+        res.status(201).json(
+            result.rows[0]
+        );
 
     } catch (error) {
 
@@ -150,6 +157,7 @@ const updateTask = async (req, res) => {
         );
 
         if (result.rows.length === 0) {
+
             return res.status(404).json({
                 message: "Task not found"
             });
@@ -188,6 +196,7 @@ const deleteTask = async (req, res) => {
         );
 
         if (result.rows.length === 0) {
+
             return res.status(404).json({
                 message: "Task not found"
             });

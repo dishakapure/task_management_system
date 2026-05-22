@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-
+const path = require("path");
 dotenv.config();
 
 const pool = require("./config/db");
@@ -9,30 +9,29 @@ const pool = require("./config/db");
 const taskRoutes = require("./routes/taskRoutes");
 const taskLogRoutes = require("./routes/taskLogRoutes");
 const authRoutes = require("./routes/authRoutes");
+const attachmentRoutes = require("./routes/attachmentRoutes");
 const app = express();
 
 
-// =========================
-// MIDDLEWARE
-// =========================
+
 
 app.use(cors());
 
 app.use(express.json());
 
 
-// =========================
-// ROUTES
-// =========================
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.use("/api/auth", authRoutes);
 
 app.use("/api/tasks", taskRoutes);
 
 app.use("/api/task-logs", taskLogRoutes);
 
-// =========================
-// DATABASE CONNECTION TEST
-// =========================
+app.use(
+    "/api/attachments",
+    attachmentRoutes
+);
 
 pool.query("SELECT NOW()")
     .then((result) => {
@@ -50,9 +49,7 @@ pool.query("SELECT NOW()")
     });
 
 
-// =========================
-// TEST ROUTE
-// =========================
+
 
 app.get("/", (req, res) => {
 
@@ -62,9 +59,7 @@ app.get("/", (req, res) => {
 });
 
 
-// =========================
-// DATABASE TEST ROUTE
-// =========================
+
 
 app.get("/test-db", async (req, res) => {
 
@@ -88,9 +83,7 @@ app.get("/test-db", async (req, res) => {
 });
 
 
-// =========================
-// SERVER
-// =========================
+
 
 const PORT = process.env.PORT || 8000;
 
